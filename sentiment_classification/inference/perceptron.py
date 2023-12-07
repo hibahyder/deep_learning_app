@@ -24,14 +24,14 @@ x_train_split, x_val_split, y_train_split, y_val_split = train_test_split(
 perceptron = Perceptron(random_state=42)
 
 # Train the model
-perceptron.fit(x_train_split, y_train_split)
+# perceptron.fit(x_train_split, y_train_split)
 
-# Make predictions on the validation set
-val_predictions = perceptron.predict(x_val_split)
+# # Make predictions on the validation set
+# val_predictions = perceptron.predict(x_val_split)
 
-# Evaluate accuracy on the validation set
-accuracy = accuracy_score(y_val_split, val_predictions)
-print(f"Validation Accuracy: {accuracy:.4f}")
+# # Evaluate accuracy on the validation set
+# accuracy = accuracy_score(y_val_split, val_predictions)
+# print(f"Validation Accuracy: {accuracy:.4f}")
 
-joblib.dump(perceptron, r"D:\Users\hibah\Desktop\perceptron_imdb.joblib")
-joblib.dump(vectorizer, r"D:\Users\hibah\Desktop\vectorizer_imdb.joblib")
+# joblib.dump(perceptron, r"D:\Users\hibah\Desktop\perceptron_imdb.joblib")
+# joblib.dump(vectorizer, r"D:\Users\hibah\Desktop\vectorizer_imdb.joblib")

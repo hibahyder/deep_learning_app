@@ -3,12 +3,16 @@ from sentiment_classification.inference.lstm_inference import LSTMSentimentAnaly
 from sentiment_classification.inference.rnn_inference import RNNSentimentAnalyzer
 from sentiment_classification.inference.dnn_inference import DNNSentimentAnalyzer
 from tumor_detection.inference.cnn_inference import preprocess_image, predict
-from sentiment_classification.inference.backpropogation import BackPropogation
-from sentiment_classification.inference.perceptron import Perceptron
+# from sentiment_classification.inference.perceptron import Perceptron
 import joblib
-
-
+from tensorflow.keras.datasets import imdb
+import pickle
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import sys
 from PIL import Image
+import os
+parent_directory = os.path.dirname(os.getcwd())
+sys.path.append(os.path.join(parent_directory, 'steamlit_app','sentiment_classification', 'training'))
 
 def main():
     st.set_page_config(page_title="DL Algorithm toolbox",
@@ -74,9 +78,21 @@ def main():
                         st.warning("Please enter a review.")
             elif method == "Backpropogation":
                 user_input = st.text_area('Enter your movie review here:', '')
-                backprop = BackPropogation(epochs=25,activation_function='sigmoid')
+                word_to_index = imdb.get_word_index()
+                model_path = os.path.join(parent_directory, 'steamlit_app','sentiment_classification','models', 'Backpropagation_model.pkl')
+                with open(model_path, 'rb') as file:
+                    backprop = pickle.load(file)
+                    max_review_length = 500
+                    new_review_tokens = [word_to_index.get(word, 0) for word in user_input.split()]
+                    new_review_tokens = pad_sequences([new_review_tokens], maxlen=max_review_length)
                 if st.button('Predict'):
-                    pass
+                    prediction = backprop.predict(new_review_tokens)
+                    prediction = prediction[0] if isinstance(prediction, list) else prediction
+                    prediction = float(prediction) if prediction is not None else None
+                    if prediction > 0.5:
+                        st.success("The review is positive")
+                    else:
+                        st.error("The review is negative")
             elif method =="Perceptron":
                 imdb_perceptron = joblib.load("sentiment_classification/models/perceptron_imdb.joblib")
 
